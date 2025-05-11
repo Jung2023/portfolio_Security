@@ -6,3 +6,35 @@ CVE-2021-3156
 참고자료
 https://github.com/blasty/CVE-2021-3156
 
+-------------------------------------------------------------
+
+1. sudoers 설정 – sudoedit만 허용
+
+sudo visudo
+
+// xss 사용자 전용 sudo 설정
+User_Alias SUDOEDITORS = xss
+
+// xss 사용자: 기본적으로 아무 sudo 명령도 허용하지 않음
+SUDOEDITORS ALL = !ALL
+
+// 다만, sudoedit는 허용
+SUDOEDITORS ALL = (ALL:ALL) NOPASSWD: sudoedit
+
+
+
+2. 환경 변수 보안 설정
+
+// sudoedit 사용 시, 악성 편집기 경로 지정 차단
+Defaults secure_path="/usr/sbin:/usr/bin:/sbin:/bin"
+Defaults env_reset
+Defaults env_keep -= "EDITOR"
+Defaults env_keep -= "VISUAL"
+
+
+
+3. su, pkexec, doas 차단
+
+(3-1) xss 사용자가 su를 실행할 수 없도록 PAM 설정
+sudoedit /etc/pam.d/su
+auth       required   pam_wheel.so use_uid      //추가
