@@ -44,3 +44,12 @@ auth       required   pam_wheel.so use_uid	//추가
 (3-2) kexec 제한
 sudo chmod 750 /usr/bin/pkexec
 
+
+
+[ 결과 테스트 ]
+
+sudoedit /etc/hosts		O
+
+sudo su root			X
+sudo bash			X
+sudo cp /bin/bash /tmp/rootbash	X
