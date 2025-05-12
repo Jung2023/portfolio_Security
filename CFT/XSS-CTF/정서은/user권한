@@ -3,9 +3,9 @@ Ubuntu User 권한 설정
 //sudoedit 를 제외한 Root 권한 상승 방법을 모두 차단하기 위해
 
 
-//vi, vim 실행 권한 삭제
+//vi, vim 실행 권한 삭제 -vi,vim 편집기 사용 차단
 sudo chmod -x /usr/bin/vim.basic
 
-//nano 실행 권한 삭제
+//nano 실행 권한 삭제 -nano 편집기 사용 차단
 sudo chmod -x /bin/nano
 
