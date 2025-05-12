@@ -38,3 +38,4 @@ Defaults env_keep -= "VISUAL"
 (3-1) xss 사용자가 su를 실행할 수 없도록 PAM 설정
 sudoedit /etc/pam.d/su
 auth       required   pam_wheel.so use_uid      //추가
+
