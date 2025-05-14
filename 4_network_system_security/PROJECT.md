@@ -1,9 +1,7 @@
 # Network / System Security - Full Project
-
+(~3/14)
 
 ## Project Image
-
-(~3/14)
 
 ![Image](https://github.com/user-attachments/assets/b335c661-f4c3-47c5-a94a-383c57d3cde5)
 
