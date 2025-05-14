@@ -1,7 +1,10 @@
-# Network / System Security Full Project
+# Network / System Security - Full Project
 
 
 ##
+
+(~3/14)
+
 R1 - R2 연결(pfSense 없는셈치고)
 
 -GNS -pfSense 왼쪽에 있는 것은 
@@ -21,8 +24,12 @@ Web/DB/Loganalyzer -DB에 SCHOOL_Student_Score 테이블
 PC 7 :DNS
 
 
-DNS	-test.txt 파일 생성 후 Sticky Bit 설정
-	-
-	-
+DNS	
+
+-test.txt 파일 생성 후 Sticky Bit 설정
+
+-
+
+-
 
  
