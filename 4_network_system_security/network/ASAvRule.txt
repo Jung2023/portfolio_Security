@@ -17,9 +17,8 @@ ________________________________________________________________________
 
 -------------------------------------------------------
 
-(R4)
+(R4)  //ssh 접속 설정
 
-//ssh 접속 설정
 (config)#ip domain-name bbb.com
 (config)#crypto key generate rsa
 1024
@@ -29,11 +28,10 @@ ________________________________________________________________________
 (config-if)#transport input ssh
 (config-if)#login local
 
---------------------------------------------
+-------------------------------------------------------
 
-//ASAv 정책
+(ASAv)  //ASAv 정책
 
-(ASAv)
 (config)#access-list asa permit tcp host 10.10.10.2 interface inside eq https
 (config)#access-list asa permit tcp host 10.10.10.2 interface inside eq telnet 
 (config)#access-list asa permit icmp host 9.9.9.3 host 5.5.5.1 echo
