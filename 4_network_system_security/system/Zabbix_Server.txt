@@ -63,9 +63,15 @@ Blue
 Usemame : Admin
 password: zabbix
 
+-------------------------------------------
+
+zabbix->get zabbix->zabbix agents
+Zabbix agent 2 v7.0.1 다운로드
+
+___________________________________________________________________________
+
 
 // Zabbix-Client (-NMS Client 5.175)
-
 
 
 
