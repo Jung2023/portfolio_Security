@@ -1,15 +1,19 @@
 # Network / System Security - Full Project
 
 
-##
+## Project Image
 
 (~3/14)
 
+![Image](https://github.com/user-attachments/assets/b335c661-f4c3-47c5-a94a-383c57d3cde5)
+
+## 
 R1 - R2 연결(pfSense 없는셈치고)
+
 
 -GNS -pfSense 왼쪽에 있는 것은 
 
--pfSense(openVPN 접속 되는지 확인)
+-pfSense (openVPN 접속 되는지 확인)
 
 
 Wazuh 안 배움 -제외
