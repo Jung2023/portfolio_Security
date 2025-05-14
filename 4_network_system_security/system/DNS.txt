@@ -1,0 +1,156 @@
+
+//DNS
+- test.txt 파일 생성 후 Sticky Bit 설정 (O)
+- 특수문자, 숫자 최소 2개 이상, 최소 10글자 이상, 패스워드 만료일 90일 (O)
+- wtmp, btmp 로그의 위치와 확인 (O)
+- setUID Bit 설정 후 권한 상승 확인 (O)
+- 간단한 BoF 코드를 통해 실행 (O)
+
+________________________________________________________________________________
+
+
+//DNS 구축
+
+#dnf install -y httpd bind bind-utils
+#vi /etc/named.conf
+---------------------------
+11 line
+dns server를 192.168.5.172로 변경	//DNS ip
+
+19 line
+localhost; -> any; 로 변경
+
+31 line
+recursion yes; -> recursion no; 로 변경
+
+52 line
+zone "jeong128.com" IN {				//사용하지 않는 도메인 주소 찾기 jeong128.com
+	type master;
+	file "/var/named/jeong128.com.zone";
+	allow-update { none;};
+}; //변경
+-----------------------------
+
+#vi /var/named/jeong128.com.zone	//cmp-> nslookup =>  서버정보 확인
+------------------------------------------------------------
+$TTL 86400
+@	IN	SOA	ns.jeong128.com. root.jeong128.com. (
+			20250210
+			24H	
+			15M
+			48H	
+			86400 )	
+;
+
+	IN	NS	ns.jeong128.com.
+	IN	A	192.168.5.172
+www	IN	A	192.168.5.172
+ns	IN	A	192.168.5.172	//DNS ip
+
+------------------------------------------------------------
+wq!
+
+
+#named-checkconf /etc/named.conf
+#named-checkzone jeong128.com /var/named/jeong128.com.zone
+
+#firewall-cmd --permanent --add-service=dns
+#firewall-cmd --reload
+#systemctl start named
+#systemctl enable named
+//어댑터 옵션->DNS 서버 192.168.5.172 설정
+//jeong128.com 접속
+
+
+________________________________________________________________________________
+
+
+1. test.txt 파일 생성 후 Sticky Bit 설정 (O)
+
+#touch test.txt
+#chmod 1644 test.txt
+#ls -l			//test.txt 파일-Sticky Bit 확인 가능(T)
+
+
+2. 특수문자, 숫자 최소 2개 이상, 최소 10글자 이상, 패스워드 만료일 90일
+
+#vi /etc/security/pwquality.conf
+-----------------------------------
+minlen = 10
+dcredit = 2
+ocredit = 2
+-----------------------------------
+#useradd jse
+#passwd jse
+#0128
+#chage -M 90 jse
+
+
+
+3. wtmp, btmp 로그의 위치와 확인
+
+#vi /var/log/stmp
+#vi /var/log/btmp
+
+
+
+4. setUID Bit 설정 후 권한 상승 확인
+
+#vi backdoor.c
+---------------------------
+#include <stdio.h>
+
+main() {
+	setuid(0);
+	setgid(0);
+	system("/bin/bash");
+}
+---------------------------------
+#dnf install -y gcc
+#gcc -o backdoor backdoor.c
+#cp backdoor /home/jse
+#su jse
+$ su root
+$ chmod 4755 backdoor
+$ ./backdoor
+# id		//root 권한
+
+
+
+5. 간단한 BoF 코드를 통해 실행 (O)
+
+#vi bof.c
+----------------------------------------
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+int check_auth(char *password) {
+	int auth = 0;
+	char temp [16];
+	strncpy(temp, password, strlen(password));
+
+	if(!strcmp(temp, "SCRECT_PASSWORD"))
+		auth = 1;
+	return auth;	
+}
+
+int main(int argc, char *argv[]) {
+	if (argc != 2) {
+		printf("Usage: ./bof ADMIN_PASSWORD");
+		exit(-1);
+	}
+	//함수 호출 -첫번째 인덱스값 (0번째: 프로그램의 이름) :사용자가 입력한 패스워드
+	if (check_auth(argv[1])) {	
+		printf("Hello Admin\n");
+	}	
+	else {	
+		printf("Access Denide\n");
+	}
+}
+----------------------------------------
+#gcc -o bof bof.c
+#ls	//bof 확인
+#./bof abcd1234
+#./bof aaaaaaaaaaaaabbbbbbbbbbccccccccccccc
+
