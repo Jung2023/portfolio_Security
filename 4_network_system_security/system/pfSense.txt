@@ -1,0 +1,18 @@
+//pfsense
+192.168.5.173
+
+
+System - Cert.Manager - CAs
+Descriptive name:pfsense
+
+System - Cert.Manager - Certificates
+Descriptive name:pfsensep
+Common Name:www.pf.com
+
+pfuser
+pfuserp
+
+
+openVPN
+pfuser
+0128
