@@ -1,0 +1,124 @@
+//WEB
+
+#dnf install -y httpd
+#systemctl start httpd
+#systemctl enable httpd
+
+#firewall-cmd --permanent --add-port=http
+#firewall-cmd --reload
+
+________________________________________________________________________________________________
+
+//DB
+
+#dnf install -y mariadb mariadb-server
+#systemctl start mariadb
+#systemctl enable mariadb
+#mysql -u root -p
+MariaDB [none]>create database School;
+MariaDB [none]>use School;
+MariaDB [School]> create table Student_Score(S_ID int(4), S_NETWORK int(3), S_SERVER int(3), S_SECURITY int(3));
+...
+MariaDB [School]> insert into Student_Score values (2, 80, 75, 80);
+...
+MariaDB [School]> select * from Student_Score;
+
+
+________________________________________________________________________________________________
+
+//Log-Server
+
+#dnf install -y rsyslog rsyslog-doc
+#vi /etc/rsyslog.conf
+40 line 		//추가
+$ModLoad imtcp
+$InputTCPServerRun 514
+
+$ModLoad imudp
+$InputUDPServerRun 514
+
+####RULES####
+--------------------
+#firewall-cmd --permanent --add-port=514/tcp
+#firewall-cmd --permanent --add-port=514/udp
+#firewall-cmd --reload
+#systemctl start rsyslog
+#systemctl enable rsyslog
+#dnf install -y lsof net-tools
+#tail -f /var/log/messages
+
+#systemctl restart rsyslog		//log 확인 가능
+#lsof -i tcp:514
+#netstat -naptl | grep 514
+
+
+//기록된 로그들을 데이터베이스(Server를 데이터베이스 저장소로)에 저장
+#dnf install -y rsyslog-mysql
+#ls /usr/share/doc
+#ls /usr/share/doc/rsyslog		//mysal-creatDB.sql 확인
+#systemctl status mariadb
+#mysql -u root -p
+>show databases;
+>exit
+
+#mysql -u root -p < /usr/share/doc/rsyslog/mysql-createDB.sql	
+password : 0128
+#mysql -u root -p		//비번 0000
+>show databases;		//Syslog 확인
+Syslog>use Syslog;
+Syslog>show tables;
+Syslog>desc SystemEvents;		//PRI Key: 기본키(주되 키)-고유한 속성?특성?...
+Syslog>grant all privileges on Syslog.* to 'jrsyslog'@'localhost' identified by 'j0128';
+Syslog>flush privileges;
+Syslog>exit
+#vi /etc/rsyslog.conf
+46 line
+$ModLoad ommysql 	//om:outmodule
+*.* :ommysql:127.0.0.1,Syslog,jrsyslog,j0128	//실시간으로 들어오는 모든 모듈들을 나 자신에 저장(Syslog DB에 저장.사용자,password)
+----------------------------
+#firewall-cmd --permanent --add-port=3306/tcp	//mysql-tcp기반
+#firewall-cmd --reload
+#systemctl restart rsyslog
+#tail -f /var/log/messages	//client에서 작동시키면 server에서 로그 확인 가능
+#mysql -u root -p
+Syslog>desc SystemEvents;	//client에서 작동시킨 프로그램을  server에서 확인 가능=>DB에 저장=>DB에서 확인 가능
+
+
+----------------------------------------------------------
+
+//Log-Client
+
+#dnf install -y rsyslog rsyslog-doc
+#vi /etc/rsyslog.conf
+83 line
+*.* @@192.168.5.170:514		//@@:udp 이용 //여기서 발생하는 모든 로그들은 192.168.5.186(Log-Server IP) 514번으로 보내도록 설정
+*.* @192.168.5.170:514		//@:tcp 이용 //
+------------------------------
+#systemctl start rsyslog
+#systemctl enable rsyslog		//server에서 lsof -i tcp:514
+
+#systemctl stop httpd
+#systemctl restart rsyslog		//server,client 모두 restart rsyslog해야 lsof 확인 가능
+#systemctl start httpd			//server에서 tail 확인->http 시작된 로그 확인 가능
+
+#systemctl stop httpd			//server에서 tail 확인
+
+
+__________________________________________________________________________________________________
+
+//Loganalyzer
+
+#dnf install -y php php-cli php-gd php-curl php-zip php-mbstring php-mysqli wget tar
+#wget https://download.adiscon.com/loganalyzer/loganalyzer-4.1.13.tar.gz
+#systemctl start httpd
+
+....
+
+
+=>Log-Server에 저장된 DB를 Loganalyzer 대시보드에서 확인 가능
+
+loganalyzer 페이지
+jeong
+0128
+//끝
+
