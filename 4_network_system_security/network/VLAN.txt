@@ -1,0 +1,141 @@
+//VLAN
+
+192.168.0.0/16
+subnet 255.255.192.0
+
+0.0-63.255
+64.0-127.255
+128.0-191.255
+192.0-255.255
+
+GateWay:
+vlan 10- 0.254
+vlan 20- 64.254
+vlan 30- 128.254
+
+vlan 10 - Server
+vlan 20 - Network
+vlan 30 - Security
+
+
+____________________________________________________________________
+
+
+(PC1)
+ip 192.168.0.1/16 192.168.0.254
+save
+
+(PC2)
+ip 192.168.128.1/16 192.168.128.254
+save
+
+(PC3)
+ip 192.168.0.2/16 192.168.0.254
+save
+
+(PC4)
+ip 192.168.64.1/16 192.168.64.254
+save
+--------------------------------------------
+(ESW1)
+
+vlan 10
+name Server
+vlan 20
+name Network
+vlan 30
+name Security
+
+no ip routing
+
+int f1/2
+sw mo access
+sw access vlan 10
+
+int f1/1
+sw mo trunk
+
+wr
+--------------------------------------------
+(ESW2)
+
+vlan 10
+name Server
+vlan 20
+name Network
+vlan 30
+name Security
+
+no ip routing
+
+int f 1/3
+sw mo access
+sw access vlan 30
+
+int f1/0-1/2
+sw mo trunk
+
+wr
+--------------------------------------------
+(ESW3)
+
+vlan 10
+name Server
+vlan 20
+name Network
+vlan 30
+name Security
+
+no ip routing
+
+int f1/3
+sw mo access
+sw access vlan 10
+
+int f1/4
+sw mo access
+sw access vlan 20
+
+int f1/2
+sw mo trunk
+
+wr
+--------------------------------------------
+
+(R1)
+int f1/0
+no shutdown
+
+int f1/0.10
+encapsulation dot1q 10
+ip add 192.168.0.254 255.255.192.0
+
+int f1/0.20
+encapsulation dot1q 20
+ip add 192.168.64.254 255.255.192.0
+
+int f1/0.30
+encapsulation dot1q 30
+ip add 192.168.128.254 255.255.192.0
+
+int s0/0
+ip add 1.1.1.1 255.255.255.0
+no shut
+
+router ospf 1
+net 1.1.1.0 0.0.0.255 area 0
+net 192.168.0.0 0.0.63.255 area 0
+net 192.168.64.0 0.0.63.255 area 0
+net 192.168.128.0 0.0.63.255 area 0
+
+wr
+
+
+____________________________________________________________________
+
+
+// 결과 확인
+
+같은 vlan  -통신 O
+다른 vlan  -통신 O
+
