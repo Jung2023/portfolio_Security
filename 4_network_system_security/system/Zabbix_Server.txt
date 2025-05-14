@@ -1,0 +1,71 @@
+
+// Zabbix-Server (5.179)
+
+
+//Zabbix 설치
+#  wget https://repo.zabbix.com/zabbix/7.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_7.0-1+ubuntu24.04_all.deb
+# dpkg -i zabbix-release_7.0-1+ubuntu24.04_all.deb
+# apt update
+# apt -y install zabbix-server-mysql zabbix-frontend-php zabbix-apache-conf zabbix-sql-scripts zabbix-agent2 php-mysql php-gd php-bcmath php-net-socket
+
+-----------------------------------------------------------------------------------
+
+//MYSQL(-DB) 설치
+#dnf install mysql-server
+
+//DB 접속
+#mysql -u root -p
+> create database my_zabbix_db;
+> create database my_zabbix_db character set utf8 collate utf8_bin;
+> show databases;      //my_zabbix_db 생성된 것 확인
+> create user 'zabbix_user'      //zabbix_user 라는 사용자 만듦
+> create user 'zabbix_user'@'localhost' identified by '!0000qwer';
+
+//my_zabbix_db 접근 권한 부여
+> grant all privileges on my_zabbix_db.* 'zabbix_user'@'localhost' with grant oprtion;	//zabbix_user 사용자에게 my_zabbix_db의 모든 권한을 부여하도록 설정
+
+-----------------------------------------------------------------------------------
+
+
+#systemctl enable zabbix-server zabbix-agent2 apache2	
+#systemctl restart zabbix-server zabbix-agent2 apache2
+#apt install -y php8.3-fpm      //fpm 오류 방지 위해 설치
+
+#vi /etc/php/8.3/fpm/pool.d/www.conf
+-------------------------------------
+//마지막 line에 추가
+php_value[max_execution_time] = 300
+php_value[memory_limit] = 128M
+php_value[post_max_size] = 16M
+php_value[upload_max_filesize] = 2M
+php_value[max_input_time] = 300
+php_value[max_input_vars] = 10000
+php_value[always_populate_raw_post_data] = -1
+php_value[date.timezone] = Asia/Seoul
+-------------------------------------
+#systemctl restart apache2 php8.3-fpm
+
+_____________________________________________________________________________________________________
+
+http://zabbix서버 IP주소/zabbix
+->설치 초기 화면 뜸->모두 ok->
+mysql
+Database host:localhost
+0
+Database name:my_zabbix_db
+plain text
+User:zabbix_user
+ubuntu에서 설정한 Password:!0000qwer
+-> zabbix server name :Zabbix server
+Asia/Seoul
+Blue
+->현재까지 설정한 내용 나옴 ->zabbix 로그인
+Usemame : Admin
+password: zabbix
+
+
+// Zabbix-Client (-NMS Client 5.175)
+
+
+
+
