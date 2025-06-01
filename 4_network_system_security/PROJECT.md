@@ -7,7 +7,7 @@
 
 
 ## 구축 및 설정 내용
-Network
+**Network**
 
 - VLAN 설정
      - 같은 vlan끼리 통신
@@ -17,9 +17,8 @@ Network
 
 - Router ACL 정책 설정
 
-***
 
-System
+**System**
 
 - pfSense (openVPN 접속 되는지 확인)
 
