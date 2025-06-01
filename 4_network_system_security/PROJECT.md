@@ -6,21 +6,14 @@
 ![Image](https://github.com/user-attachments/assets/b335c661-f4c3-47c5-a94a-383c57d3cde5)
 
 ## 
-R1 - R2 연결(pfSense 없는셈치고)
-
+-VLAN 설정
 
 -GNS -pfSense 왼쪽에 있는 것은 
 
 -pfSense (openVPN 접속 되는지 확인)
 
 
-Wazuh 안 배움 -제외
-
-
-Web/DB/Loganalyzer -DB에 SCHOOL_Student_Score 테이블
-
-
--CTF : 팀원과 겹치지 않도록 머신 선택
+Web/DB/Loganalyzer -DB에 SCHOOL_Student_Score 테이블 생성
 
 
 PC 7 :DNS
