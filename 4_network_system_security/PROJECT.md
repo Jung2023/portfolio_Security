@@ -10,8 +10,8 @@
 Network
 
 - VLAN 설정
-     -같은 vlan끼리 통신
-     -다른 vlan끼리 통신
+     - 같은 vlan끼리 통신
+     - 다른 vlan끼리 통신
 
 -ASAv Rule 설정
 
