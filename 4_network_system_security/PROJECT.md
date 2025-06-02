@@ -20,7 +20,7 @@
 
 **System**
 
-- pfSense (openVPN 접속 되는지 확인)
+- pfSense
 
 - FTP
 
