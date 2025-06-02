@@ -22,6 +22,10 @@
 
 - pfSense (openVPN 접속 되는지 확인)
 
+- FTP
+
+- Firewalld Rule 설정 
+
 - Web/DB/Loganalyzer
 
 - DB 시스템
